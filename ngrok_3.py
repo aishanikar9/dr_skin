@@ -30,25 +30,116 @@ else:
 # --- MINIMAL HTML UI ---
 HTML_TEMPLATE = """
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Doctor Skin</title>
     <style>
-        body { font-family: sans-serif; background: #f4f4f4; margin: 0; }
-        header { background: #305cde; color: white; padding: 10px; text-align: center; }
-        header img { height: 40px; vertical-align: middle; }
-        .container { width: 100%; max-width: 600px; margin: auto; padding: 10px; }
-        .section { background: white; padding: 15px; margin-top: 15px; border-radius: 8px; }
-        input, button { padding: 8px; border-radius: 5px; border: 1px solid #ccc; font-size: 14px; }
-        button { background: #305cde; color: white; border: none; cursor: pointer; }
-        button:hover { background: #1e3d9a; }
-        #imagePreview { max-width: 100%; margin-top: 10px; border-radius: 6px; display: none; }
-        #result { margin-top: 8px; }
-        .chat-box { border: 1px solid #ccc; padding: 8px; height: 200px; overflow-y: auto; margin-bottom: 8px; }
-        .chat-input { display: flex; gap: 5px; }
-        .chat-input input { flex: 1; }
-        .user { color: #305cde; font-weight: bold; }
-        .bot { color: #1e3d9a; font-weight: bold; }
+        body {
+            font-family: sans-serif;
+            background: #EDF1F6;
+            margin: 0;
+            padding: 0;
+        }
+        header {
+            background: #081F5C;
+            color: white;
+            padding: 10px;
+            text-align: center;
+        }
+        header img {
+            height: 60px;
+            vertical-align: middle;
+            border: 2px solid white;
+            border-radius: 8px;
+            background: white;
+        }
+        header h2 {
+            display: inline-block;
+            margin: 0;
+            font-size: 1.5rem;
+            vertical-align: middle;
+        }
+        .container {
+            width: 95%;
+            max-width: 600px;
+            margin: auto;
+            padding: 10px;
+        }
+        .section {
+            background: white;
+            padding: 15px;
+            margin-top: 15px;
+            border-radius: 12px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        input, button {
+            padding: 10px;
+            border-radius: 8px;
+            border: 1px solid #ccc;
+            font-size: 14px;
+        }
+        button {
+            background: #7096D1;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+        button:hover {
+            background: #081F5C;
+        }
+        #imagePreview {
+            max-width: 100%;
+            margin-top: 10px;
+            border-radius: 8px;
+            display: none;
+            border: 2px solid #D0E3FF;
+        }
+        #result {
+            margin-top: 8px;
+            font-weight: bold;
+            color: #081F5C;
+        }
+        .chat-box {
+            background: #F7F2EB;
+            padding: 10px;
+            height: 300px;
+            overflow-y: auto;
+            border-radius: 10px;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+        .message {
+            max-width: 80%;
+            padding: 8px 12px;
+            border-radius: 16px;
+            font-size: 14px;
+        }
+        .user {
+            align-self: flex-end;
+            background: #7096D1;
+            color: white;
+            border-bottom-right-radius: 4px;
+        }
+        .bot {
+            align-self: flex-start;
+            background: #D0E3FF;
+            color: #081F5C;
+            border-bottom-left-radius: 4px;
+        }
+        .chat-input {
+            display: flex;
+            gap: 5px;
+            margin-top: 8px;
+        }
+        .chat-input input {
+            flex: 1;
+        }
+        @media (max-width: 600px) {
+            header h2 { font-size: 1.2rem; }
+            header img { height: 50px; }
+        }
     </style>
 </head>
 <body>
@@ -107,7 +198,11 @@ document.getElementById("chatSend").addEventListener("click", function(){
     const message = input.value.trim();
     if (!message) return;
     const chatBox = document.getElementById("chatBox");
-    chatBox.innerHTML += `<div><span class="user">You:</span> ${message}</div>`;
+    const userDiv = document.createElement("div");
+    userDiv.className = "message user";
+    userDiv.textContent = message;
+    chatBox.appendChild(userDiv);
+    chatBox.scrollTop = chatBox.scrollHeight;
     input.value = "";
     fetch("/chat", {
         method: "POST",
@@ -115,7 +210,10 @@ document.getElementById("chatSend").addEventListener("click", function(){
         body: JSON.stringify({ message })
     }).then(res => res.json())
       .then(data => {
-        chatBox.innerHTML += `<div><span class="bot">Bot:</span> ${data.message}</div>`;
+        const botDiv = document.createElement("div");
+        botDiv.className = "message bot";
+        botDiv.textContent = data.message;
+        chatBox.appendChild(botDiv);
         chatBox.scrollTop = chatBox.scrollHeight;
       });
 });
