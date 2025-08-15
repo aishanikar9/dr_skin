@@ -3,5 +3,4 @@ torch
 torchvision
 Pillow
 datasets
--e ./notopenai
 pkg-resources
