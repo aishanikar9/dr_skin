@@ -2,6 +2,5 @@ flask
 torch
 torchvision
 Pillow
-notopenai
 datasets
 pkg-resources
