@@ -283,7 +283,10 @@ def predict(image_path):
   with torch.no_grad():
     output = model(input_batch)
     probabilities = F.softmax(output[0], dim=0) #softmax over first image
-  _, label = torch.topk(probabilities, 1)
+  prob, label = torch.topk(probabilities, 1)
+  print(prob)
+  if prob<0.2:
+      return "none detected"
   #get string w label
   label = label.item()
   for key, val in label_ind.items():
